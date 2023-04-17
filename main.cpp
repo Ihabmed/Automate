@@ -1,78 +1,114 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
-
-struct Arc
-{
-    char symbol;
-    struct state *dest;
-};
 
 struct state
 {
     int num;
     bool isfinal;
-    vector<struct Arc*> arcs;
+    vector<struct Arc> arcs;
 };
 
-struct automate
+struct Arc
 {
-    struct etate** auto;
-    int n;
+    char symbol;
+    struct state dest;
 };
 
-struct automate creation_etats();
-void creation_arcs(struct automate);
-void display (struct state*);
+
+
+vector<struct state> creation_states ();
+void creation_arcs(vector<struct state>);
+void display (struct state);
 
 
 int main()
 {
-    /*struct state *s0 = new struct state;
-    struct state *s1 = new struct state;
-    struct state *s2 = new struct state;
-    struct state *s3 = new struct state;
-    struct Arc *a0 = new struct Arc;
-    struct Arc *a1 = new struct Arc;
-    struct Arc *a2 = new struct Arc;
-    s0->num = 0;
-    s1->num = 1;
-    s2->num = 2;
-    s3->num = 3;
-    s0->isfinal = false;
-    s1->isfinal = false;
-    s2->isfinal = true;
-    s3->isfinal = true;
-    a0->symbol = 'a';
-    a1->symbol = 'b';
-    a2->symbol = 'c';
-    a0->dest = s1;
-    a1->dest = s2;
-    a2->dest = s3;
-    s0->arcs.push_back(a0);
-    s1->arcs.push_back(a1);
-    s1->arcs.push_back(a2);*/
-    struct automate input = creation_etats();
-    display(input);
+    vector<struct state> Automate = creation_states();
+    display(Automate[0]);
     return 0;
 }
 
 
-void display (struct automate s)
+vector<struct state> creation_states()
 {
-    if (s[j].auto == NULL)
+    vector<struct state> states;
+    string ans;
+    cout << "voulez vous créer une etat ? (y/n) ";
+    cin >> ans;
+    while (ans == "y")
     {
-        cout << "automate vide";
+        struct state x;
+        cout << "donnez le numero d'etat : ";
+        cin >> x.num;
+        x.isfinal = false;
+        states.push_back(x);
+        cout << "voulez vous créer une etat ? (y/n) ";
+        cin >> ans;
+    }
+    cout << "donnez les etats finals : ";
+    cin >> ans;
+    for (int i = 0; i < ans.length(); i += 2)
+    {
+        for (int j = 0; j < states.size(); j++)
+        {
+            if ((ans[i] - 48) == states[j].num)
+            {
+                states[j].isfinal = true;
+            }
+        }
+    }
+    creation_arcs(states);
+    return states;
+}
+
+
+void creation_arcs (vector<struct state> states)
+{
+    string ans;
+    cout << "voulez vous créer un arc ? (y/n) ";
+    cin >> ans;
+    while (ans == "y")
+    {
+        int n;
+        cout << "donnez le numero de source d'arc ";
+        cin >> n;
+        for (int i = 0; i < states.size() && states[i].num != n; i++)
+        {
+            int m;
+            cout << "donnez le numero de destination d'arc ";
+            cin >> m;
+            for (int j = 0; j < states.size() && states[j].num != m; j++)
+            {
+                    struct Arc arc;
+                    arc.dest = states[j];
+                    cout << "donnez le symbol d'arc : ";
+                    cin >> arc.symbol;
+                    states[i].arcs.push_back(arc);
+            }
+        }
+        cout << "voulez vous créer un arc ? (y/n) ";
+        cin >> ans;
+    }
+}
+
+
+void display (struct state states)
+{
+    if (states.isfinal == true)
+    {
+        return;
     }
     else
     {
-        cout << s[j]->auto->num;
-        int i = s[j]->auto->arcs.size();
+        cout << states.num;
+        int i = states.arcs.size();
         while (i != 0)
         {
-            cout << "_____" << s[j]->auto->arcs[--i]->symbol << "_____";
-            display(s[j]->auto->arcs[i]->dest);
+            cout << "_____" << states.arcs[--i].symbol << "_____";
+            display(states.arcs[i].dest);
             if (i > 0)
             {
                 cout << endl;
@@ -80,30 +116,4 @@ void display (struct automate s)
             }
         }
     }
-}
-
-
-struct automate creation_etats()
-{
-    int n;
-    cout << "donnez le nombre d'etate dans l'automate : ";
-    cin >> n;
-    struct state *etats[n];
-    for (int i = 0; i < n; i++)
-    {
-        cout << "donnez le numero d'etate " + (i + 1) + " : ";
-        cin >> etats[i]->num;
-        etats[i]->isfinal = false;
-        char choix;
-        cout << "est-ce-que l'etat " + (i + 1) + "est fini ? (y/n) ";
-        cin >> choix;
-        if (choix == 'y')
-        {
-            etats[i]->isfinal = true;
-        }
-    }
-    struct automate output;
-    output.auto = etats;
-    output.n = n;
-    return output;
 }
