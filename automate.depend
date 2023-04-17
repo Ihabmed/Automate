@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1681212360 source:c:\users\hp\documents\tp\automate\main.cpp
+	<iostream>
+	<vector>
+
