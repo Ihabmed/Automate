@@ -75,18 +75,26 @@ void creation_arcs (vector<struct state> states)
         int n;
         cout << "donnez le numero de source d'arc ";
         cin >> n;
-        for (int i = 0; i < states.size() && states[i].num != n; i++)
+        for (int i = 0; i < states.size(); i++)
         {
-            int m;
-            cout << "donnez le numero de destination d'arc ";
-            cin >> m;
-            for (int j = 0; j < states.size() && states[j].num != m; j++)
+            if (states[i].num == n)
             {
-                    struct Arc arc;
-                    arc.dest = states[j];
-                    cout << "donnez le symbol d'arc : ";
-                    cin >> arc.symbol;
-                    states[i].arcs.push_back(arc);
+                int m;
+                cout << "donnez le numero de destination d'arc ";
+                cin >> m;
+                for (int j = 0; j < states.size(); j++)
+                {
+                    if (states[j].num == m)
+                    {
+                        struct Arc arc;
+                        arc.dest = states[j];
+                        cout << "donnez le symbol d'arc : ";
+                        cin >> arc.symbol;
+                        states[i].arcs.push_back(arc);
+                        break;
+                    } 
+                }
+                break;
             }
         }
         cout << "voulez vous créer un arc ? (y/n) ";
